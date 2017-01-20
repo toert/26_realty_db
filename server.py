@@ -1,23 +1,29 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, url_for, request
+from flask_sqlalchemy import SQLAlchemy
+from model import db, Ad
+from helpers import get_forms_content, REGION_LIST
 
 app = Flask(__name__)
+app.config.from_object('config')
+db.init_app(app)
 
-@app.route('/')
+ADS_IN_ONE_PAGE = 15
+
+
+@app.route('/', methods=['GET'])
 def ads_list():
-    return render_template('ads_list.html', ads=[{
-            "settlement": "Череповец",
-            "under_construction": False,
-            "description": '''Квартира в отличном состоянии. Заезжай и живи!''',
-            "price": 2080000,
-            "oblast_district": "Череповецкий район",
-            "living_area": 17.3,
-            "has_balcony": True,
-            "address": "Юбилейная",
-            "construction_year": 2001,
-            "rooms_number": 2,
-            "premise_area": 43.0,
-        }]*10
-    )
+    region, min_price, max_price, page = get_forms_content()
+    suitable_ads = Ad.query.filter(Ad.oblast_district == region,
+                                   Ad.price > min_price,
+                                   Ad.price < max_price,
+                                   Ad.actual
+                                   ).paginate(int(page), ADS_IN_ONE_PAGE, False)
+    parameters = {'region': region,
+                  'min_price': min_price,
+                  'max_price': max_price}
+    return render_template('ads_list.html', ads=suitable_ads,
+                           params=parameters, region_list=REGION_LIST)
+
 
 if __name__ == "__main__":
     app.run()
