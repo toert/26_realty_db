@@ -1,7 +1,7 @@
 from flask import Flask, render_template, url_for, request
 from flask_sqlalchemy import SQLAlchemy
-from model import db, Ad
-from helpers import get_forms_content, REGION_LIST
+from model import db, Ad, REGION_LIST
+from forms import get_forms_content
 
 app = Flask(__name__)
 app.config.from_object('config')

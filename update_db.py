@@ -1,5 +1,5 @@
 from requests import get
-from helpers import add_ad_in_db
+from model import add_ad_in_db
 from server import db, Ad, app
 
 

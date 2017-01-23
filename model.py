@@ -1,7 +1,21 @@
 from flask_sqlalchemy import SQLAlchemy
 
-
 db = SQLAlchemy()
+
+REGION_LIST = [
+    {'letter': '', 'districts': [('Череповецкий район', 'Череповец'),
+                                 ('Шекснинский район', 'Шексна'),
+                                 ('Вологодский район', 'Вологда')]},
+
+    {'letter': 'Б', 'districts': [('Бабаевский район', 'Бабаево'),
+                                  ('Бабушкинский район', 'Село имени Бабушкина'),
+                                  ('Белозерский район', 'Белозерск')]},
+
+    {'letter': 'В', 'districts': [('Великоустюгский район', 'Великий Устюг'),
+                                  ('Верховажский район', 'Верховажье'),
+                                  ('Вожегодский район', 'Вожега'),
+                                  ('Вологодский район', 'Вологда'),
+                                  ('Вытегорский район', 'Вытегра')]}]
 
 
 class Ad(db.Model):
@@ -19,17 +33,27 @@ class Ad(db.Model):
     rooms_number = db.Column(db.Integer)
     premise_area = db.Column(db.Float)
 
-    def __init__(self, new_json, actual):
-        self.actual = actual
-        self.id = new_json['id']
-        self.settlement = new_json['settlement']
-        self.under_construction = new_json['under_construction']
-        self.description = new_json['description']
-        self.price = new_json['price']
-        self.oblast_district = new_json['oblast_district']
-        self.living_area = new_json['living_area']
-        self.has_balcony = new_json['has_balcony']
-        self.address = new_json['address']
-        self.construction_year = new_json['construction_year']
-        self.rooms_number = new_json['rooms_number']
-        self.premise_area = new_json['premise_area']
+
+def add_ad_in_db(info_json, actual=True):
+    new_ad = Ad(info_json)
+    db.session.add(new_ad, actual)
+    db.session.commit()
+    return new_ad.id
+
+
+def create_ad_from_dict(new_json, actual):
+    new_ad = Ad()
+    new_ad.actual = actual
+    new_ad.id = new_json['id']
+    new_ad.settlement = new_json['settlement']
+    new_ad.under_construction = new_json['under_construction']
+    new_ad.description = new_json['description']
+    new_ad.price = new_json['price']
+    new_ad.oblast_district = new_json['oblast_district']
+    new_ad.living_area = new_json['living_area']
+    new_ad.has_balcony = new_json['has_balcony']
+    new_ad.address = new_json['address']
+    new_ad.construction_year = new_json['construction_year']
+    new_ad.rooms_number = new_json['rooms_number']
+    new_ad.premise_area = new_json['premise_area']
+    return new_ad

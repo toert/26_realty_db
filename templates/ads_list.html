@@ -37,8 +37,8 @@
                   <div class="form-group">
                     <select name="oblast_district" class="form-control">
                         {% for group in region_list %}
-                            <optgroup label="{{group[0]}}">
-                                {% for region in group[1] %}
+                            <optgroup label="{{group['letter']}}">
+                                {% for region in group['districts'] %}
                                     {% if region[0] == params.region %}
                                         <option selected value="{{region[0]}}">{{region[1]}}</option>
                                     {% else %}
@@ -142,10 +142,10 @@
                         {% else %}
                           <li class="disabled"><span>»</span></li>
                         {% endif %}
-                      {% else %}
+                    </ul>
+					  {% else %}
                         <p>Кажется всё уже выкупили</p>
                       {% endif %}
-                    </ul>
                   </div>
                 </div>
               </div>
