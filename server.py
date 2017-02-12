@@ -12,17 +12,21 @@ ADS_IN_ONE_PAGE = 15
 
 @app.route('/', methods=['GET'])
 def ads_list():
-    region, min_price, max_price, page = get_forms_content()
-    suitable_ads = Ad.query.filter(Ad.oblast_district == region,
-                                   Ad.price > min_price,
-                                   Ad.price < max_price,
+    region_param, min_price_param, max_price_param, page = get_forms_content()
+    suitable_ads = Ad.query.filter(Ad.oblast_district == region_param,
+                                   Ad.price > min_price_param,
+                                   Ad.price < max_price_param,
                                    Ad.actual
                                    ).paginate(int(page), ADS_IN_ONE_PAGE, False)
-    parameters = {'region': region,
-                  'min_price': min_price,
-                  'max_price': max_price}
-    return render_template('ads_list.html', ads=suitable_ads,
-                           params=parameters, region_list=REGION_LIST)
+    parameters = {'region_param': region_param,
+                  'min_price_param': min_price_param,
+                  'max_price_param': max_price_param}
+
+    return render_template('ads_list.html',
+                           ads=suitable_ads,
+                           params=parameters,
+                           region_list=REGION_LIST,
+                           max_price=Ad.query.order_by(Ad.price.desc()).first().price)
 
 
 if __name__ == "__main__":

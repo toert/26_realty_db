@@ -13,24 +13,28 @@ def get_new_loads():
 def reset_actual():
     all_ads_from_db = Ad.query.all()
     for ad in all_ads_from_db:
-        ad.actual = False
+        ad.is_expired = True
         db.session.add(ad)
         db.session.commit()
 
 
 def load_new_data(new_json):
-    reset_actual()
+    actual_ads = []
     for ad in new_json:
         new_post_in_db = Ad.query.filter_by(id=ad['id']).first()
         if new_post_in_db is None:
-            add_ad_in_db(ad)
-        else:
-            new_post_in_db.actual = True
-            db.session.add(new_post_in_db)
-            db.session.commit()
+            new_post_in_db = add_ad_in_db(ad)
+        actual_ads.append(new_post_in_db)
+    reset_actual()
+    for ad in Ad.query.all():
+        if ad in actual_ads:
+            ad.is_expired = False
+            db.session.add(ad)
+    db.session.commit()
 
 
 if __name__ == '__main__':
     with app.app_context():
+        db.create_all()
         new_data = get_new_loads()
         load_new_data(new_data)

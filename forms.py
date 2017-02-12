@@ -3,20 +3,16 @@ from model import Ad, REGION_LIST
 
 
 def get_forms_content():
-    region = request.args.get('oblast_district')
-    min_price = request.args.get('min_price')
-    max_price = request.args.get('max_price')
+    region_param = request.args.get('oblast_district')
+    min_price_param = request.args.get('min_price_param')
+    max_price_param = request.args.get('max_price_param')
     page = request.args.get('page')
-    return validate_form_data(region, min_price, max_price, page)
+    return validate_form_data(region_param, min_price_param, max_price_param, page)
 
 
-def validate_form_data(region, min_price, max_price, page):
-    if not region or region is None:
-        region = REGION_LIST[0]['districts'][0][0]
-    if not min_price or min_price is None:
-        min_price = 0
-    if not max_price or max_price is None:
-        max_price = Ad.query.order_by(Ad.price.desc()).first().price
-    if not page or page is None:
-        page = 1
-    return region, min_price, max_price, page
+def validate_form_data(region_param, min_price_param, max_price_param, page):
+    region_param = region_param or REGION_LIST[0]['districts'][0][0]
+    min_price_param = min_price_param or 0
+    max_price_param = max_price_param or Ad.query.order_by(Ad.price.desc()).first().price
+    page = page or 1
+    return region_param, min_price_param, max_price_param, page

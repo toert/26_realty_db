@@ -39,7 +39,7 @@
                         {% for group in region_list %}
                             <optgroup label="{{group['letter']}}">
                                 {% for region in group['districts'] %}
-                                    {% if region[0] == params.region %}
+                                    {% if region[0] == params.region_param %}
                                         <option selected value="{{region[0]}}">{{region[1]}}</option>
                                     {% else %}
                                         <option value="{{region[0]}}">{{region[1]}}</option>
@@ -61,10 +61,10 @@
                   <div class="form-group ">
                     <div class="input-group">
                       <span class="input-group-addon">от</span>
-                      {% if params.min_price != 0 %}
-                        <input autocomplete="off" type="text" value="{{params.min_price}}" name="min_price" class="form-control js-price-format" placeholder="любая">
+                      {% if params.min_price_param != 0 %}
+                        <input autocomplete="off" type="text" value="{{params.min_price_param}}" name="min_price_param" class="form-control js-price-format" placeholder="любая">
                         {% else %}
-                        <input autocomplete="off" type="text" value="" name="min_price" class="form-control js-price-format" placeholder="любая">
+                        <input autocomplete="off" type="text" value="" name="min_price_param" class="form-control js-price-format" placeholder="любая">
                       {% endif %}
                       <span class="input-group-addon">р.</span>
                     </div>
@@ -72,10 +72,10 @@
                   <div class="form-group">
                     <div class="input-group">
                       <span class="input-group-addon">до</span>
-                      {% if params.max_price != 6050000 %}
-                        <input autocomplete="off" type="text" value="{{params.max_price}}" name="max_price" class="form-control js-price-format" placeholder="любая">
+                      {% if params.max_price_param != max_price %}
+                        <input autocomplete="off" type="text" value="{{params.max_price_param}}" name="max_price_param" class="form-control js-price-format" placeholder="любая">
                         {% else %}
-                        <input autocomplete="off" type="text" value="" name="max_price" class="form-control js-price-format" placeholder="любая">
+                        <input autocomplete="off" type="text" value="" name="max_price_param" class="form-control js-price-format" placeholder="любая">
                       {% endif %}
 
                       <span class="input-group-addon">р.</span>
@@ -122,14 +122,14 @@
                     <ul class="pagination pull-right">
                       {% if ads.total %}
                         {% if ads.has_prev %}
-                            <li><a href="{{ url_for(request.endpoint, oblast_district=params.region, min_price=params.min_price, max_price=params.max_price, page=page) }}" role="prev">«</a></li>
+                            <li><a href="{{ url_for(request.endpoint, oblast_district=params.region_param, min_price_param=params.min_price_param, max_price_param=params.max_price_param, page=page) }}" role="prev">«</a></li>
                         {% else %}
                             <li class="disabled"><span>«</span></li>
                         {% endif %}
                         {% for page in ads.iter_pages() %}
                             {% if page %}
                                 {% if page != ads.page %}
-                                    <li><a href="{{ url_for(request.endpoint, oblast_district=params.region, min_price=params.min_price, max_price=params.max_price, page=page) }}">{{ page }}</a></li>
+                                    <li><a href="{{ url_for(request.endpoint, oblast_district=params.region_param, min_price_param=params.min_price_param, max_price_param=params.max_price_param, page=page) }}">{{ page }}</a></li>
                                 {% else %}
                                     <li class="active"><span>{{ page }}</span></li>
                                 {% endif %}
@@ -138,7 +138,7 @@
                             {% endif %}
                         {% endfor %}
                         {% if ads.has_next %}
-                          <li><a href="{{ url_for(request.endpoint, oblast_district=params.region, min_price=params.min_price, max_price=params.max_price, page=ads.next_num) }}"><span>»</span></a></li>
+                          <li><a href="{{ url_for(request.endpoint, oblast_district=params.region_param, min_price_param=params.min_price_param, max_price_param=params.max_price_param, page=ads.next_num) }}"><span>»</span></a></li>
                         {% else %}
                           <li class="disabled"><span>»</span></li>
                         {% endif %}

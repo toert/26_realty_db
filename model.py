@@ -19,11 +19,11 @@ REGION_LIST = [
 
 
 class Ad(db.Model):
-    actual = db.Column(db.Boolean)
+    is_expired = db.Column(db.Boolean)
     id = db.Column(db.Integer, primary_key=True)
     settlement = db.Column(db.String(80))
     under_construction = db.Column(db.Boolean)
-    description = db.Column(db.String(80))
+    description = db.Column(db.Text)
     price = db.Column(db.Integer)
     oblast_district = db.Column(db.String(80))
     living_area = db.Column(db.Float)
@@ -33,17 +33,20 @@ class Ad(db.Model):
     rooms_number = db.Column(db.Integer)
     premise_area = db.Column(db.Float)
 
+    def __repr__(self):
+        return 'Exp:{}/Id:{}'.format(self.is_expired, self.id)
 
-def add_ad_in_db(info_json, actual=True):
-    new_ad = Ad(info_json)
-    db.session.add(new_ad, actual)
+
+def add_ad_in_db(info_json, is_expired=True):
+    new_ad = create_ad_from_dict(info_json, is_expired)
+    db.session.add(new_ad)
     db.session.commit()
-    return new_ad.id
+    return new_ad
 
 
-def create_ad_from_dict(new_json, actual):
+def create_ad_from_dict(new_json, expiration):
     new_ad = Ad()
-    new_ad.actual = actual
+    new_ad.is_expired = expiration
     new_ad.id = new_json['id']
     new_ad.settlement = new_json['settlement']
     new_ad.under_construction = new_json['under_construction']
