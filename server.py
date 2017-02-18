@@ -16,7 +16,7 @@ def ads_list():
     suitable_ads = Ad.query.filter(Ad.oblast_district == region_param,
                                    Ad.price > min_price_param,
                                    Ad.price < max_price_param,
-                                   Ad.actual
+                                   Ad.is_expired.is_(False)
                                    ).paginate(int(page), ADS_IN_ONE_PAGE, False)
     parameters = {'region_param': region_param,
                   'min_price_param': min_price_param,
