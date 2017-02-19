@@ -9,18 +9,10 @@ def get_new_loads():
     return get(URL_ACTUAL_ADS).json()
 
 
-def reset_actual():
-    all_ads_from_db = Ad.query.all()
-    for ad in all_ads_from_db:
-        ad.is_expired = True
-        db.session.add(ad)
-        db.session.commit()
-
-
 def load_new_data(new_json):
     actual_ads_ids = []
     for ad in new_json:
-        new_post_in_db = Ad.query.filter_by(id=ad['id']).one()
+        new_post_in_db = Ad.query.filter_by(id=ad['id']).first()
         if new_post_in_db is None:
             new_post_in_db = add_ad_in_db(ad, False)
         actual_ads_ids.append(new_post_in_db.id)
